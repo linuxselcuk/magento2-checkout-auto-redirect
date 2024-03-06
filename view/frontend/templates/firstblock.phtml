@@ -1,0 +1,48 @@
+<?php 
+/*
+* template for homepage block
+*/
+
+if ($block->isCustomBlockEnabled()): ?>
+
+<div>
+    <h1><?php echo $block->BlockTitle();?></h1>
+</div>
+
+<div class="random-product-block">
+
+    <?php
+    // getting random product into the block.
+    $product = $block->getRandomProduct();
+     ?>
+
+    <div class="product">
+        <a href="<?= $product->getProductUrl() ?>">
+            <img src="<?= $block->escapeUrl($product->getImageUrl()) ?>" alt="<?= $block->escapeHtml($product->getName()) ?>">
+        </a>
+        <h3 class="product-name"><?= $block->escapeHtml($product->getName()) ?></h3>
+        <div class="product-price"><?= $block->escapeHtml($product->getPriceInfo()->getPrice('final_price')->getAmount()->getValue()) ?></div>
+        <p><?= $product->getPrice() ?></p>
+        
+        <?php 
+        
+        // preparing the form as per the task assignment. redirecting to checkout on/off
+        // without hitting the cart.
+
+        if ($block->RedirectoEnable() == "1"): ?>
+
+         <form action="<?= $block->getUrl('buynow/cart/add', ['product' => $product->getId()]) ?>" method="post">
+            
+        <?php else:?>
+
+         <form action="<?= $block->getUrl('checkout/cart/add', ['product' => $product->getId()]) ?>" method="post">
+            
+        <?php endif; ?>
+
+            <?= $block->getBlockHtml('formkey') ?>
+            <button type="submit">Buy</button>
+         </form>
+    </div>
+</div>
+
+<?php endif; ?>
